@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>PDB Viewer: 1vj5</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"  rel="stylesheet">	
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
+    <style>
+        .glmol {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            color: white;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="../src/css/glmol.controls.css">
+    <link rel="stylesheet" type="text/css" href="../3rd-party/css/spectrum.css">
+    <link rel="stylesheet" type="text/css" href="../src/css/glmol.sequence.css">
+</head>
+<body cz-shortcut-listen="true">   
+	<div class="col-md-6"> 	 <!-- container -->
+		<div id="glmol01" class="glmol" data-controls="settings reset screenshot fullscreen">
+			<div id="glmol01_pdbTitle" style="position: absolute; left: 5px; top: 5px;"></div>
+			<textarea id="glmol01_src" style="display: none;"></textarea>
+		</div>
+	</div> <!-- /container -->
+	<div class="col-md-6" id="sequence">
+	</div>
+    <!-- js at end to improve loading time -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script defer="defer" type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    
+	<!-- basic glmol -->
+    <script defer="defer" type="text/javascript" src="../3rd-party/js/Three49custom.js"></script>
+    <script defer="defer" type="text/javascript" src="../3rd-party/js/GLmol.js"></script>    
+	<!-- jquery plugin for fullscreen -->
+    <script defer="defer" type="text/javascript" src="../3rd-party/js/jquery.fullscreen.js"></script>
+	<!-- glmol plugin dependency for all further plugins (glmol.handlers) -->
+    <script defer="defer" type="text/javascript" src="../src/js/glmol.handlers.js"></script>
+	<!-- glmol surface support + accompanying plugin (gloml.surface) -->
+    <script defer="defer" type="text/javascript" src="../3rd-party/js/ProteinSurface4.js"></script>
+    <script defer="defer" type="text/javascript" src="../src/js/glmol.surface.js"></script>
+	<!-- libraries neccessary for screenshot functionality (glmol.controls) -->
+    <script defer="defer" type="text/javascript" src="../3rd-party/js/Blob.js"></script>
+    <script defer="defer" type="text/javascript" src="../3rd-party/js/canvas-toBlob.min.js"></script>
+    <script defer="defer" type="text/javascript" src="../3rd-party/js/FileSaver.min.js"></script>
+	<!-- glmol.controls plugin and color picker (spectrum) -->	
+    <script defer="defer" type="text/javascript" src="../src/js/glmol.controls.js"></script>
+    <script defer="defer" type="text/javascript" src="../3rd-party/js/spectrum.js"></script>
+	<!-- glmol.sequence sequence viewer plugin -->
+    <script defer="defer" type="text/javascript" src="../src/js/glmol.sequence.js"></script>    
+    <!-- multi-touch support. glmol.touch and hammer.js -->
+    <script defer="defer" type="text/javascript" src="../3rd-party/js/hammer.min.js"></script>
+    <script defer="defer" type="text/javascript" src="../3rd-party/js/jquery.hammer.min.js"></script>
+    <script defer="defer" type="text/javascript" src="../src/js/glmol.touch.js"></script>
+	<!-- app -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var glmol01 = new GLmol('glmol01', true);           
+            if (glmol01.ready) {
+                
+                $.get("http://www.rcsb.org/pdb/files/1vj5.pdb", function (ret) {
+                    $("#glmol01_src").val(ret);
+                    glmol01.loadMolecule();
+					glmol01.sequence('sequence', 10);
+                });
+                
+            }            
+        });
+    </script>
+</body></html>

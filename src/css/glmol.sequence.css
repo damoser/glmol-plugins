@@ -1,0 +1,56 @@
+a.sequence-collapse {
+    position: relative;
+    float: right;
+    top: .5em;
+    right: 1em;
+    display: inline-block;
+}
+.sequence {
+    background-color: inherit;
+    border: none;
+    /*display: table;*/
+}
+
+.sequence .accordion-body {
+    font-family: "Lucida Console", monospace;
+}
+.sequence .res {
+    display: table-row;
+}
+
+.sequence pre {
+    background-color: inherit;
+    word-wrap: normal;
+    word-break: normal;
+    white-space: pre;
+}
+
+.sequence .res.num {
+    color: #808080;
+}
+.sequence .res > span.light {
+    color: black;
+}
+.sequence .res > span.dark {
+    color: white;
+}
+.sequence .chain  .res > span.spacer:after {
+    content: ' ';
+}
+
+.sequence .chain .res > span:not(.spacer):hover {
+    background-color: yellow !important;
+    font-weight: bold;
+    cursor: pointer;
+}
+.sequence .chain .res > span.dark:not(.spacer):hover {
+    color: black;
+}
+
+/*.sequence .panel-body {
+    background-color: #f5f5f5;
+}*/
+
+.sequence .accordion-toggle {
+    display: inline-block;
+}
