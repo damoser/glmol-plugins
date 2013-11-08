@@ -42,6 +42,13 @@
             position: 'bottom right',
 
             register: function (elem, glmol) {
+
+                /* remove control again if no fullscreen support */
+                if (!!!$.support.fullscreen) {
+                    elem.remove();
+                    return;
+                }
+
                 var cont = glmol.container;
                 var icon = elem.children('.control-icon');
                 // tooltip handler
