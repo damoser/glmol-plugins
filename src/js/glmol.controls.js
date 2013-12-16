@@ -95,9 +95,13 @@
                 var icon = elem.children('.control-icon');
                 // Click handler
                 elem.click(function () {
-                    glmol.defineRepresentation();
-                    glmol.zoomInto(glmol.getAllAtoms());
-                    glmol.show();
+                    if (!!glmol.reset) {
+                        glmol.reset();
+                    } else {
+                        glmol.defineRepresentation();
+                        glmol.zoomInto(glmol.getAllAtoms());
+                        glmol.show();
+                    }
                 });
 
                 // tooltip handler
@@ -186,7 +190,7 @@
                                     </ul>\
                                 </li>\
                                 <li class="dropdown-submenu  bottom-up experimental-surface">\
-                                    <a tabindex="-1" href="#"><i class="fa fa-warning-sign"></i> Surface (exp.) </a>\
+                                    <a tabindex="-1" href="#"><i class="fa fa-warning"></i> Surface (exp.) </a>\
                                     <ul class="dropdown-menu" role="menu">\
                                         <li><a tabindex="-1" href="#" class="menuitem" data-setting="surface" data-value="sas">Solvent accessible</a></li>\
                                         <li><a tabindex="-1" href="#" class="menuitem" data-setting="surface" data-value="ses">Solvent excluded</a></li>\
@@ -339,22 +343,36 @@
                         for (var attrname in _settings) { defaultSettings[attrname] = _settings[attrname]; }
                     }
 
-                    // set checked on controls
-                    for (var attrname in defaultSettings) {
-                        _elem.children('.settings-icon').find('.menuitem[data-setting="' + attrname + '"][data-value="' + defaultSettings[attrname] + '"]').click();
-                    }
-
+                    _glmol.reset = function () {
+                        // clear all 
+                        _elem.children('.settings-icon').find('.menuitem.checked').removeClass('checked').children('.fa-check').remove();
+                        // set checked on controls
+                        for (var attrname in defaultSettings) {
+                            _elem.children('.settings-icon').find('.menuitem[data-setting="' + attrname + '"][data-value="' + defaultSettings[attrname] + '"]').click();
+                        }
+                        _glmol.surfaceGeo = undefined;
+                        _glmol.meshType = undefined;
+                        applyBtn.click();
+                        //_glmol.defineRepresentation();
+                        var atoms = _glmol.getAllAtoms();
+                        if (atoms.length > 0) {
+                            _glmol.zoomInto(atoms);
+                        }
+                        _glmol.show();
+                    };
+                    _glmol.reset();
                     // set bgcolor
                     _elem.children('.settings-icon').find('.menuitem[data-setting="bgcolor"] > input').spectrum('set', defaultSettings.bgcolor);
                     
                     return function (event) {
                         var _elem = elem;
                         var _glmol = glmol;
+                        
                         // get all checked buttons
                         var settings = {};
-                        for (var attrname in defaultSettings) {
-                            settings[attrname] = defaultSettings[attrname];
-                        }
+                        //for (var attrname in defaultSettings) {
+                        //    settings[attrname] = defaultSettings[attrname];
+                        //}
 
                         var checked = _elem.children('.settings-icon').find('.menuitem.checked');
                         checked.each(function () {
@@ -366,11 +384,12 @@
                         });
                         settings.bgcolor = '0x' + _elem.children('.settings-icon').find('.menuitem[data-setting="bgcolor"] > input').spectrum('get').toHex();
                         function defineViewRep() {
+   
                             var all = this.getAllAtoms();
                             var allHet = this.getHetatms(all);
                             var hetatm = this.removeSolvents(allHet);
                             // color
-
+                            this.colorByAtom(all, {});
                             var colorSidechain = settings.color_sc === 'show';
                             if (colorSidechain) {
                                 for (var i in all) {
@@ -611,7 +630,7 @@
                 this.ready = false;
                 $('#' + id).css('background-color', '#000');
                 if ($.support.webgl === $.support.webglModes.NO) {
-                    this.viewerMessage.empty().html('<p class="text-center" data-toggle="tooltip" data-placement="bottom" title="Please make sure WebGL is activated in your web browser. Latest versions of Chrome (8.0 and higher), Firefox (4.0 and higher) and Opera (15.0 and higher) are supporting WebGL by default. In case you are using Safari (5.1 and higher) please activate WebGL under the menu item \'developer\'. Internet Explorer does not support WebGL"><i class="fa fa-warning-sign"></i> Sorry, your browser does not support WebGL. <br /><i class="fa fa-info"></i></p>');
+                    this.viewerMessage.empty().html('<p class="text-center" data-toggle="tooltip" data-placement="bottom" title="Please make sure WebGL is activated in your web browser. Latest versions of Chrome (8.0 and higher), Firefox (4.0 and higher), Opera (15.0 and higher) and Internet Explorer (11 and higher) are supporting WebGL by default. In case you are using Safari (5.1 and higher) please activate WebGL under the menu item \'developer\'."><i class="fa fa-warning-sign"></i> Sorry, your browser does not support WebGL. <br /><i class="fa fa-info"></i></p>');
                 } else if ($.support.webgl === $.support.webglModes.MAYBE) {
                     this.viewerMessage.empty().html('<p class="text-center" data-toggle="tooltip" data-placement="bottom" title="Your Browser seems to support WebGL. However, it is disabled or unavailable. Please ensure that you are running the latest drivers for your video card and that you are not attempting to use your browser via Remote Desktop (RDP)"><i class="fa fa-warning-sign"></i> Sorry, your browser does not support WebGL. <br /><i class="fa fa-info"></i></p>');
                 }

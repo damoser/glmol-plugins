@@ -8,6 +8,8 @@
     glmol.prototype.plugin.surface = true;
 
     glmol.prototype.generateMesh = function (group, atomlist, type, colorChanged, wireframe, wireframeLinewidth) {
+        if (!!this.isLoading)
+            return;
         wireframe = wireframe || false;
         wireframeLinewidth = wireframeLinewidth || 1;
         colorChanged = colorChanged || false;
@@ -46,6 +48,8 @@
     };
 
     glmol.prototype.updateSurfaceColor = function () {
+        if (!!this.isLoading)
+            return;
         var vertices = this.surfaceGeo.vertices;
 
         var geo = new THREE.Geometry();
